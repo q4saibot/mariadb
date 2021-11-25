@@ -53,6 +53,7 @@ services:
 networks:
   mariadb:
       driver: bridge
+      name: MariaDB
 
 
 volumes:

@@ -1,0 +1,66 @@
+version: "3.9"
+
+
+services:
+
+  dbase:
+    container_name: Requests.MariaDB
+
+    image: mariadb
+
+    restart: always
+
+    hostname: dbase
+    networks:
+      - requests
+    ports:
+      - "3306"
+
+    volumes:
+      - mariadb:/var/lib/mysql
+    
+    environment:
+      MARIADB_ROOT_PASSWORD: YMReR4TuaJdgkPMyYqNZnuYE
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: X9dU5mC4qY59nzix
+      MARIADB_DATABASE: requests
+
+
+  admin:
+    container_name: Requests.MyAdmin
+
+    image: phpmyadmin
+
+    restart: always
+    depends_on:
+      - dbase
+
+    hostname: admin
+    networks:
+      - requests
+    ports:
+      - "80"
+
+    volumes:
+      - myadmin:/var/www/html
+    
+    environment:
+      PMA_HOST: dbase
+      PMA_USER: root
+      PMA_PASSWORD: YMReR4TuaJdgkPMyYqNZnuYE
+
+
+networks:
+
+  requests:
+    driver: bridge
+    name: Requests
+
+
+volumes:
+
+  mariadb:
+    name: Requests.MariaDB
+
+  myadmin:
+    name: Requests.MyAdmin
