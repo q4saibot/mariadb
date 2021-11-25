@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+
+  mariadb:
+
+    image: mariadb
+
+    networks:
+      - mariadb
+    hostname: mariadb
+    ports:
+      - "3306"
+
+    volumes:
+      - mariadb:/var/lib/mysql
+
+    environment:
+      MYSQL_ROOT_PASSWORD: tRoqn2AkgRJfKhU9Mm9vdaUt
+      MYSQL_USER: user
+      MYSQL_PASSWORD: hChNAo7N7vFewmZC
+      MYSQL_DATABASE: base
+
+  myadmin:
+    image: phpmyadmin
+    depends_on:
+      - mariadb
+
+    networks:
+      - mariadb
+    hostname: myadmin
+    ports:
+      - "80"
+
+    volumes:
+      - myadmin:/var/www/html
+      - myadminapache:/etc/apache2
+      - myadminphpini:/usr/local/etc/php
+
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: tRoqn2AkgRJfKhU9Mm9vdaUt
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      start_period: 1m
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+
+networks:
+  mariadb:
+      driver: bridge
+
+
+volumes:
+  mariadb:
+    name: MariaDB
+
+  myadmin:
+    name: MyAdmin
+  myadminapache:
+    name: MyAdmin.apache2
+  myadminphpini:
+    name: MyAdmin.php.ini
